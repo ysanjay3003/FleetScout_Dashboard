@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FleetScout Member Report</title>
+    <style>
+        :root {
+            --ink: #15284a;
+            --muted: #5f7392;
+            --line: #d6ddf0;
+            --card: #ffffff;
+            --accent: #2e6bff;
+            --accent-soft: #e8efff;
+            --good: #0f8c66;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            color: var(--ink);
+        }
+
+        .report {
+            width: 794px;
+            margin: 0 auto;
+            padding: 28px 28px 36px;
+        }
+
+        .pdf-logo-bar {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 20px 20px;
+            background: #2b3f80;
+            border-radius: 14px;
+            box-shadow: 0 10px 24px rgba(40, 52, 120, 0.25);
+        }
+
+        .pdf-logo-bar img {
+            width: 200px;
+            height: auto;
+            display: block;
+            object-fit: contain;
+        }
+
+        /* ── HERO ─────────────────────────────────────────── */
+        .hero {
+            position: relative;
+            overflow: hidden;
+            background: #3f52c8;
+            color: #fff;
+            border-radius: 24px;
+            padding: 32px 36px 28px;
+            box-shadow: 0 20px 36px rgba(68, 86, 200, 0.32);
+            min-height: 170px;
+        }
+
+        .hero::before {
+           content: none;
+        }
+
+        .hero::after {
+            content: none;
+        }
+
+        .hero-inner {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 16px;
+        }
+
+        .hero-left {
+            flex: 1;
+        }
+
+        .hero-eyebrow {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            opacity: 0.72;
+            margin-bottom: 10px;
+        }
+
+        .hero-name {
+            font-size: 32px;
+            font-weight: 800;
+            line-height: 1.0;
+            letter-spacing: 0.01em;
+            word-break: break-word;
+        }
+
+        .hero-team {
+            font-size: 18px;
+            font-weight: 700;
+            opacity: 0.95;
+            margin-top: 10px;
+            letter-spacing: 0.01em;
+        }
+
+
+        /* ── META GRID ────────────────────────────────────── */
+        .meta-grid {
+            margin-top: 14px;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .meta {
+            background: var(--card);
+            border: 1px solid rgba(210, 219, 240, 0.9);
+            border-radius: 14px;
+            padding: 14px 16px;
+            box-shadow: 0 8px 18px rgba(64, 82, 168, 0.12);
+        }
+
+        .meta .label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.09em;
+            color: var(--muted);
+            margin-bottom: 7px;
+            font-weight: 700;
+        }
+
+        .meta .value {
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--ink);
+            line-height: 1.2;
+        }
+
+        .meta.total {
+            border-color: rgba(15, 140, 102, 0.34);
+            background: #ffffff;
+        }
+
+        .meta.total .value {
+            font-size: 22px;
+            color: var(--good);
+        }
+
+        /* ── BATCH SECTION ────────────────────────────────── */
+        .section {
+            margin-top: 14px;
+            background: var(--card);
+            border: 1px solid rgba(210, 219, 240, 0.9);
+            border-radius: 16px;
+            padding: 18px 18px 10px;
+            box-shadow: 0 10px 22px rgba(60, 78, 160, 0.12);
+        }
+
+        .section h2 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--ink);
+            margin-bottom: 14px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead th {
+            text-align: left;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            border-bottom: 1px solid var(--line);
+            padding: 8px 10px 10px;
+        }
+
+        thead th.num {
+            text-align: right;
+        }
+
+        tbody td {
+            font-size: 14px;
+            padding: 12px 10px;
+            border-bottom: 1px solid #edf2fb;
+            color: #1f355a;
+            vertical-align: middle;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        td.num {
+            text-align: right;
+            font-weight: 800;
+            color: var(--ink);
+        }
+
+        .empty {
+            color: var(--muted);
+            font-size: 13px;
+            padding: 8px 2px 4px;
+        }
+
+        .footer {
+            margin-top: 14px;
+            text-align: center;
+            color: #6f82a3;
+            font-size: 11px;
+            letter-spacing: 0.02em;
+            line-height: 1.45;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="report">
+
+        <div class="pdf-logo-bar">
+            <img src="http://127.0.0.1:8000/fleetscout-logo" alt="FleetScout" crossorigin="anonymous" />
+        </div>
+
+        <section class="hero">
+            <div class="hero-inner">
+                <div class="hero-left">
+                    <p class="hero-eyebrow">FleetScout Analytics</p>
+                    <p class="hero-name">{{member_name}}</p>
+                    <p class="hero-team">{{team_name}}</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="meta-grid">
+            <article class="meta">
+                <div class="label">Member</div>
+                <div class="value">{{member_name}}</div>
+            </article>
+            <article class="meta">
+                <div class="label">Date Range</div>
+                <div class="value">{{date_range}}</div>
+            </article>
+            <article class="meta total">
+                <div class="label">Total Images Submitted</div>
+                <div class="value">{{total_images}}</div>
+            </article>
+        </section>
+
+        <section class="section">
+            <h2>Batches</h2>
+            {{batch_content}}
+        </section>
+
+        <footer class="footer">
+            <div>© {{copyright_year}} FleetScout. All rights reserved.</div>
+        </footer>
+
+    </div>
+</body>
+
+</html>
