@@ -69,7 +69,7 @@ def init_db():
             ('Sandeep',1),('Adity',1),
             ('Koushik',2),('Bhaskar',2),
             ('Himanshu',3),('Shivam',3),
-            ('Druvh',4),('Ashis',4),
+            ('Druvh',4),('Ashis',4),('Miraz',4),
             ('Partha',5),('Piyush',5)
         ]
 
@@ -132,6 +132,47 @@ def get_members(team_id: int):
         "SELECT * FROM members WHERE team_id=?",
         (team_id,)
     ).fetchall()
+
+@app.post("/members")
+def create_member(data: dict):
+    conn = get_db()
+    name = (data.get("name") or "").strip()
+    profile_image = (data.get("profile_image") or "").strip()
+    team_id = data.get("team_id")
+
+    if not name:
+        raise HTTPException(status_code=400, detail="Member name is required")
+
+    try:
+        team_id = int(team_id)
+    except (TypeError, ValueError):
+        raise HTTPException(status_code=400, detail="Valid team is required")
+
+    team_exists = conn.execute(
+        "SELECT id FROM teams WHERE id = ?",
+        (team_id,)
+    ).fetchone()
+    if not team_exists:
+        raise HTTPException(status_code=404, detail="Team not found")
+
+    cursor = conn.execute(
+        "INSERT INTO members (name, team_id, profile_image) VALUES (?, ?, ?)",
+        (name, team_id, profile_image)
+    )
+    conn.commit()
+
+    created = conn.execute("""
+        SELECT
+            m.id,
+            m.name,
+            m.team_id,
+            m.profile_image,
+            t.name as team_name
+        FROM members m
+        JOIN teams t ON t.id = m.team_id
+        WHERE m.id = ?
+    """, (cursor.lastrowid,)).fetchone()
+    return created
 
 @app.get("/members-directory")
 def get_members_directory():

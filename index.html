@@ -145,7 +145,91 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 18px;
             padding: 18px 24px;
+        }
+
+        .header-card {
+            position: relative;
+            z-index: 10;
+            overflow: visible;
+        }
+
+        .topbar-main {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header-lookup {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            min-width: 260px;
+            max-width: 360px;
+        }
+
+        .header-lookup-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-lookup-title .kicker {
+            margin: 0;
+        }
+
+        .header-lookup input {
+            width: 100%;
+            border: 1px solid var(--line);
+            background: rgba(248, 251, 255, 0.96);
+            border-radius: 16px;
+            padding: 12px 14px;
+            outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+        }
+
+        .header-lookup input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(46, 107, 255, 0.14);
+            transform: translateY(-1px);
+        }
+
+        .ql-input-wrap {
+            position: relative;
+        }
+
+        #qlResult {
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            right: 0;
+            z-index: 9999;
+            background: #ffffff;
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+            padding: 10px;
+            max-height: 320px;
+            overflow: auto;
+            display: none;
+        }
+
+        #qlResult.visible {
+            display: block;
+        }
+
+        #qlResult .empty {
+            background: transparent;
+            border: 0;
+            padding: 6px 4px;
+        }
+
+        #qlResult .list {
+            gap: 8px;
+        }
+
+        #qlResult .list-item {
+            padding: 10px 12px;
         }
 
         .eyebrow {
@@ -203,6 +287,24 @@
             font-weight: 800;
             outline: none;
             padding: 0;
+        }
+
+        .date-chip.compact {
+            flex-direction: row;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            width: fit-content;
+        }
+
+        .date-chip.compact .date-chip-head {
+            gap: 6px;
+        }
+
+        .date-chip-value {
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--text);
         }
 
         .hero {
@@ -698,6 +800,121 @@
             border: 1px solid rgba(216, 225, 240, 0.96);
         }
 
+        .team-card {
+            justify-content: space-between;
+            gap: 16px;
+            padding: 16px 18px;
+        }
+
+        .team-card-left {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .team-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .team-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 10px;
+            background: #e1f5ee;
+            display: grid;
+            place-items: center;
+            color: #0f6e56;
+        }
+
+        .team-icon svg {
+            width: 16px;
+            height: 16px;
+            stroke: currentColor;
+        }
+
+        .team-name {
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .team-pill-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .team-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border-radius: 20px;
+            background: var(--primary-soft);
+            padding: 4px 10px 4px 6px;
+        }
+
+        .team-pill-avatar {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #0f172a;
+        }
+
+        .team-pill-avatar.teal {
+            background: #e1f5ee;
+            color: #0f6e56;
+        }
+
+        .team-pill-avatar.blue {
+            background: #e6efff;
+            color: #1d4ed8;
+        }
+
+        .team-pill-name {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .team-pill-count {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--primary);
+        }
+
+        .team-total {
+            min-width: 86px;
+            padding-left: 16px;
+            border-left: 0.5px solid var(--line);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+        }
+
+        .team-total-value {
+            font-size: 28px;
+            font-weight: 500;
+        }
+
+        .team-total-label {
+            font-size: 11px;
+            color: var(--muted);
+            text-transform: lowercase;
+        }
+
+        .breakdown-action-btn svg {
+            width: 13px;
+            height: 13px;
+        }
+
         .list-item strong {
             display: block;
             font-size: 15px;
@@ -997,6 +1214,11 @@
                 gap: 12px;
             }
 
+            .header-lookup {
+                width: 100%;
+                max-width: none;
+            }
+
             .hero-stats,
             .form-grid,
             .filter-grid,
@@ -1203,6 +1425,20 @@
             );
         }
 
+        function formatDisplay(iso) {
+            if (!iso) return "—";
+            var p = String(iso).split("-");
+            if (p.length !== 3) return iso;
+            return p[2] + "-" + p[1] + "-" + p[0];
+        }
+
+        function getInitials(name) {
+            var parts = String(name || "").trim().split(/\s+/).filter(Boolean);
+            if (!parts.length) return "??";
+            if (parts.length === 1) return parts[0].slice(0, 2);
+            return (parts[0][0] + parts[1][0]).slice(0, 2);
+        }
+
         function App() {
             const today = new Date().toISOString().split("T")[0];
             function getViewFromLocation() {
@@ -1220,7 +1456,6 @@
             const [member, setMember] = React.useState("");
             const [batch, setBatch] = React.useState("");
             const [count, setCount] = React.useState("");
-            const [dashboardDate, setDashboardDate] = React.useState(today);
             const [entryDate, setEntryDate] = React.useState(today);
             const [teamReportTeam, setTeamReportTeam] = React.useState("");
             const [teamReportDate, setTeamReportDate] = React.useState(today);
@@ -1239,10 +1474,18 @@
             const [downloadingRangeMemberId, setDownloadingRangeMemberId] = React.useState(null);
             const [memberDirectory, setMemberDirectory] = React.useState([]);
             const [savingMemberId, setSavingMemberId] = React.useState(null);
+            const [newMemberName, setNewMemberName] = React.useState("");
+            const [newMemberTeamId, setNewMemberTeamId] = React.useState("");
+            const [newMemberProfileImage, setNewMemberProfileImage] = React.useState("");
+            const [isCreatingMember, setIsCreatingMember] = React.useState(false);
             const [selectedBreakdownMember, setSelectedBreakdownMember] = React.useState(null);
             const [selectedBreakdownBatches, setSelectedBreakdownBatches] = React.useState([]);
             const [isBreakdownBatchesLoading, setIsBreakdownBatchesLoading] = React.useState(false);
             const [breakdownBatchError, setBreakdownBatchError] = React.useState("");
+            const [breakdownEditingId, setBreakdownEditingId] = React.useState(null);
+            const [breakdownEditName, setBreakdownEditName] = React.useState("");
+            const [breakdownEditCount, setBreakdownEditCount] = React.useState("");
+            const [breakdownDeleteId, setBreakdownDeleteId] = React.useState(null);
             const [toast, setToast] = React.useState(null);
             const [batchError, setBatchError] = React.useState("");
             const [editingBatchId, setEditingBatchId] = React.useState(null);
@@ -1253,7 +1496,10 @@
             const [batchLookupResults, setBatchLookupResults] = React.useState([]);
             const [batchLookupError, setBatchLookupError] = React.useState("");
             const [isBatchLookupLoading, setIsBatchLookupLoading] = React.useState(false);
+            const [isBatchLookupOpen, setIsBatchLookupOpen] = React.useState(false);
             const batchLookupRequestRef = React.useRef(0);
+            const batchLookupAbortRef = React.useRef(null);
+            const batchLookupWrapRef = React.useRef(null);
 
             React.useEffect(() => {
                 fetch("http://127.0.0.1:8000/teams")
@@ -1273,8 +1519,8 @@
             }, []);
 
             React.useEffect(() => {
-                loadReports(dashboardDate);
-            }, [dashboardDate]);
+                loadReports(entryDate);
+            }, [entryDate]);
 
             React.useEffect(() => {
                 if (!teamReportTeam || !teamReportDate) {
@@ -1317,8 +1563,8 @@
 
             React.useEffect(() => {
                 if (!selectedBreakdownMember) return;
-                loadBreakdownMemberBatches(selectedBreakdownMember.member_id, dashboardDate);
-            }, [dashboardDate]);
+                loadBreakdownMemberBatches(selectedBreakdownMember.member_id, entryDate);
+            }, [entryDate]);
 
             React.useEffect(() => {
                 const hasOpenModal = Boolean(selectedBreakdownMember || selectedRangeMember);
@@ -1340,21 +1586,31 @@
 
             React.useEffect(() => {
                 const normalizedBatch = (batchLookup || "").trim();
+                if (batchLookupAbortRef.current) {
+                    batchLookupAbortRef.current.abort();
+                    batchLookupAbortRef.current = null;
+                }
                 if (!normalizedBatch) {
                     setBatchLookupResults([]);
                     setBatchLookupError("");
                     setIsBatchLookupLoading(false);
+                    setIsBatchLookupOpen(false);
                     return;
                 }
 
-                const timeoutId = window.setTimeout(async () => {
-                    const requestId = Date.now();
-                    batchLookupRequestRef.current = requestId;
-                    setIsBatchLookupLoading(true);
-                    setBatchLookupError("");
+                const abortController = new AbortController();
+                batchLookupAbortRef.current = abortController;
+                const requestId = Date.now();
+                batchLookupRequestRef.current = requestId;
+                setIsBatchLookupLoading(true);
+                setBatchLookupError("");
+                setIsBatchLookupOpen(true);
 
+                (async () => {
                     try {
-                        const response = await fetch(`http://127.0.0.1:8000/report/batch-search/${encodeURIComponent(normalizedBatch)}`);
+                        const response = await fetch(`http://127.0.0.1:8000/report/batch-search/${encodeURIComponent(normalizedBatch)}`, {
+                            signal: abortController.signal
+                        });
                         if (!response.ok) {
                             let message = "Unable to search batch details.";
                             try {
@@ -1375,7 +1631,8 @@
                             setBatchLookupResults(Array.isArray(data) ? data : []);
                             setBatchLookupError("");
                         }
-                    } catch (_) {
+                    } catch (error) {
+                        if (error?.name === "AbortError") return;
                         if (batchLookupRequestRef.current === requestId) {
                             setBatchLookupResults([]);
                             setBatchLookupError("Server is not reachable. Please try again.");
@@ -1385,10 +1642,21 @@
                             setIsBatchLookupLoading(false);
                         }
                     }
-                }, 220);
+                })();
 
-                return () => window.clearTimeout(timeoutId);
+                return () => abortController.abort();
             }, [batchLookup]);
+
+            React.useEffect(() => {
+                function handleDocumentClick(event) {
+                    if (!batchLookupWrapRef.current) return;
+                    if (batchLookupWrapRef.current.contains(event.target)) return;
+                    setIsBatchLookupOpen(false);
+                }
+
+                document.addEventListener("click", handleDocumentClick);
+                return () => document.removeEventListener("click", handleDocumentClick);
+            }, []);
 
             function loadMembers(teamId) {
                 setTeam(teamId);
@@ -1445,6 +1713,94 @@
                 reader.readAsDataURL(file);
             }
 
+            function handleNewMemberPhotoFile(event) {
+                const file = event.target.files?.[0];
+                if (!file) return;
+
+                if (!file.type.startsWith("image/")) {
+                    setToast({
+                        type: "error",
+                        title: "Invalid file",
+                        message: "Please select an image file."
+                    });
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = () => {
+                    setNewMemberProfileImage(String(reader.result || ""));
+                };
+                reader.readAsDataURL(file);
+            }
+
+            async function createMemberProfile() {
+                const trimmedName = (newMemberName || "").trim();
+                const normalizedTeamId = Number(newMemberTeamId);
+
+                if (!trimmedName) {
+                    setToast({
+                        type: "error",
+                        title: "Name required",
+                        message: "Member name cannot be empty."
+                    });
+                    return;
+                }
+
+                if (!normalizedTeamId) {
+                    setToast({
+                        type: "error",
+                        title: "Team required",
+                        message: "Please select a team for the new member."
+                    });
+                    return;
+                }
+
+                setIsCreatingMember(true);
+                try {
+                    const response = await fetch("http://127.0.0.1:8000/members", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            name: trimmedName,
+                            team_id: normalizedTeamId,
+                            profile_image: newMemberProfileImage || ""
+                        })
+                    });
+
+                    if (!response.ok) {
+                        let errorMessage = "Unable to create member.";
+                        try {
+                            const errorData = await response.json();
+                            errorMessage = errorData.detail || errorMessage;
+                        } catch (_) {
+                            // keep fallback
+                        }
+                        throw new Error(errorMessage);
+                    }
+
+                    setToast({
+                        type: "success",
+                        title: "Member created",
+                        message: `${trimmedName} was added successfully.`
+                    });
+                    setNewMemberName("");
+                    setNewMemberTeamId("");
+                    setNewMemberProfileImage("");
+                    loadMemberDirectory();
+                    if (team && Number(team) === normalizedTeamId) {
+                        loadMembers(team);
+                    }
+                } catch (error) {
+                    setToast({
+                        type: "error",
+                        title: "Create failed",
+                        message: error.message || "Unable to create member."
+                    });
+                } finally {
+                    setIsCreatingMember(false);
+                }
+            }
+
             async function saveMemberProfile(memberItem) {
                 const trimmedName = (memberItem.edit_name || "").trim();
                 if (!trimmedName) {
@@ -1484,7 +1840,7 @@
                         message: `${trimmedName} was updated successfully.`
                     });
                     loadMemberDirectory();
-                    loadReports(dashboardDate);
+                    loadReports(entryDate);
                     if (rangeStartDate && rangeEndDate) {
                         loadRangeReports(rangeStartDate, rangeEndDate);
                     }
@@ -1563,7 +1919,7 @@
 
                 cancelBatchEdit();
                 loadTeamMemberReport();
-                loadReports(dashboardDate);
+                loadReports(entryDate);
                 setToast({
                     type: "success",
                     title: "Entry updated",
@@ -1600,7 +1956,7 @@
                 }
 
                 loadTeamMemberReport();
-                loadReports(dashboardDate);
+                loadReports(entryDate);
                 setToast({
                     type: "success",
                     title: "Entry deleted",
@@ -1659,7 +2015,7 @@
                     title: "Entry added successfully",
                     message: `Batch ${batch} was saved for the selected member.`
                 });
-                loadReports(dashboardDate);
+                loadReports(entryDate);
             }
 
             function openView(nextView) {
@@ -1673,7 +2029,7 @@
                 window.location.hash = nextPath;
             }
 
-            function loadReports(selectedDate = dashboardDate) {
+            function loadReports(selectedDate = entryDate) {
                 fetch(`http://127.0.0.1:8000/report/person-by-date/${selectedDate}`)
                     .then(res => res.json())
                     .then(setPersonReport);
@@ -1818,7 +2174,7 @@
                                     ${batches.map((batchItem) => `
                                         <tr>
                                             <td>${escapeHtml(batchItem.batch_name || "-")}</td>
-                                            <td>${escapeHtml(batchItem.created_at || "-")}</td>
+                                            <td>${escapeHtml(formatDisplay(batchItem.created_at))}</td>
                                             <td class="num">${escapeHtml(batchItem.image_count || 0)}</td>
                                         </tr>
                                     `).join("")}
@@ -1830,7 +2186,7 @@
                     const hydratedHtml = templateHtml
                         .replaceAll("{{member_name}}", escapeHtml(memberItem.member_name || "Member"))
                         .replaceAll("{{team_name}}", escapeHtml(memberItem.team_name || "-"))
-                        .replaceAll("{{date_range}}", `${escapeHtml(normalizedStart)} to ${escapeHtml(normalizedEnd)}`)
+                        .replaceAll("{{date_range}}", `${escapeHtml(formatDisplay(normalizedStart))} to ${escapeHtml(formatDisplay(normalizedEnd))}`)
                         .replaceAll("{{total_images}}", escapeHtml(totalImages))
                         .replaceAll("{{copyright_year}}", escapeHtml(new Date().getFullYear()))
                         .replaceAll("{{generated_on}}", escapeHtml(new Date().toLocaleString()))
@@ -1928,9 +2284,13 @@
                 setSelectedBreakdownBatches([]);
                 setBreakdownBatchError("");
                 setIsBreakdownBatchesLoading(false);
+                setBreakdownEditingId(null);
+                setBreakdownEditName("");
+                setBreakdownEditCount("");
+                setBreakdownDeleteId(null);
             }
 
-            function loadBreakdownMemberBatches(memberId, selectedDate = dashboardDate) {
+            function loadBreakdownMemberBatches(memberId, selectedDate = entryDate) {
                 setIsBreakdownBatchesLoading(true);
                 setBreakdownBatchError("");
                 fetch(`http://127.0.0.1:8000/report/member-batches-by-range/${memberId}/${selectedDate}/${selectedDate}`)
@@ -1959,7 +2319,106 @@
                 }
 
                 setSelectedBreakdownMember(memberItem);
-                loadBreakdownMemberBatches(memberItem.member_id, dashboardDate);
+                setBreakdownEditingId(null);
+                setBreakdownEditName("");
+                setBreakdownEditCount("");
+                setBreakdownDeleteId(null);
+                loadBreakdownMemberBatches(memberItem.member_id, entryDate);
+            }
+
+            function startBreakdownEdit(batchItem) {
+                setBreakdownEditingId(batchItem.id);
+                setBreakdownEditName(batchItem.batch_name || "");
+                setBreakdownEditCount(String(batchItem.image_count || ""));
+                setBreakdownDeleteId(null);
+            }
+
+            function cancelBreakdownEdit() {
+                setBreakdownEditingId(null);
+                setBreakdownEditName("");
+                setBreakdownEditCount("");
+            }
+
+            async function saveBreakdownEdit(batchItem) {
+                const parsedCount = Number(breakdownEditCount);
+                if (!breakdownEditName.trim() || !breakdownEditCount || !Number.isFinite(parsedCount) || parsedCount <= 0) {
+                    setToast({
+                        type: "error",
+                        title: "Invalid input",
+                        message: "Batch name and image count are required."
+                    });
+                    return;
+                }
+
+                const response = await fetch(`http://127.0.0.1:8000/annotations/${batchItem.id}`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        batch_name: breakdownEditName,
+                        image_count: parsedCount
+                    })
+                });
+
+                if (!response.ok) {
+                    let message = "Unable to update entry.";
+                    try {
+                        const errorData = await response.json();
+                        message = errorData.detail || message;
+                    } catch (_) {
+                        // keep fallback
+                    }
+                    setToast({
+                        type: "error",
+                        title: "Update failed",
+                        message
+                    });
+                    return;
+                }
+
+                setSelectedBreakdownBatches((prev) => prev.map((item) => (
+                    item.id === batchItem.id
+                        ? { ...item, batch_name: breakdownEditName, image_count: parsedCount }
+                        : item
+                )));
+                cancelBreakdownEdit();
+                loadReports(entryDate);
+            }
+
+            function requestBreakdownDelete(batchItem) {
+                setBreakdownDeleteId(batchItem.id);
+                setBreakdownEditingId(null);
+                setBreakdownEditName("");
+                setBreakdownEditCount("");
+            }
+
+            function cancelBreakdownDelete() {
+                setBreakdownDeleteId(null);
+            }
+
+            async function confirmBreakdownDelete(batchItem) {
+                const response = await fetch(`http://127.0.0.1:8000/annotations/${batchItem.id}`, {
+                    method: "DELETE"
+                });
+
+                if (!response.ok) {
+                    let message = "Unable to delete entry.";
+                    try {
+                        const errorData = await response.json();
+                        message = errorData.detail || message;
+                    } catch (_) {
+                        // keep fallback
+                    }
+                    setToast({
+                        type: "error",
+                        title: "Delete failed",
+                        message
+                    });
+                    return;
+                }
+
+                setSelectedBreakdownBatches((prev) => prev.filter((item) => item.id !== batchItem.id));
+                setBreakdownDeleteId(null);
+                loadReports(entryDate);
             }
 
             const totalToday = personReport.reduce((sum, item) => sum + (Number(item.total) || 0), 0);
@@ -2007,8 +2466,8 @@
                     </aside>
 
                     <main className="main">
-                        <section className="topbar panel">
-                            <div>
+                        <section className="topbar panel header-card">
+                            <div className="topbar-main">
                                 <div className="eyebrow">Workforce Analytics</div>
                                 <h1 className="title">
                                     {activeView === "dashboard"
@@ -2030,13 +2489,53 @@
                                 </p>
                             </div>
                             {activeView === "dashboard" ? (
-                                <div className="date-chip">
-                                    <div className="date-chip-head">
-                                        <Icon name="calendar" />
-                                        <label>Dashboard Date</label>
+                                    <div className="header-lookup" ref={batchLookupWrapRef}>
+                                        <div className="header-lookup-title">
+                                            <div className="report-icon"><Icon name="search" /></div>
+                                            <div>
+                                                <div className="kicker">Quick Lookup</div>
+                                                <h3 className="section-title">Search by Batch Number</h3>
+                                            </div>
+                                        </div>
+                                        <div className="ql-input-wrap">
+                                            <input
+                                                value={batchLookup}
+                                                placeholder="Enter batch number"
+                                                onChange={(event) => {
+                                                    setBatchLookup(event.target.value);
+                                                    setIsBatchLookupOpen(true);
+                                                    if (batchLookupError) setBatchLookupError("");
+                                                }}
+                                                onFocus={() => setIsBatchLookupOpen(true)}
+                                            />
+                                            <div
+                                                id="qlResult"
+                                                className={isBatchLookupOpen && batchLookup.trim() ? "visible" : ""}
+                                            >
+                                                {isBatchLookupLoading ? (
+                                                    <div className="empty">Searching batch...</div>
+                                                ) : batchLookupError ? (
+                                                    <div className="empty">{batchLookupError}</div>
+                                                ) : batchLookupResults.length ? (
+                                                    <ul className="list">
+                                                        {batchLookupResults.map((resultItem) => (
+                                                            <li className="list-item" key={resultItem.id}>
+                                                                <div>
+                                                                    <strong>{resultItem.batch_name}</strong>
+                                                                    <span className="list-meta"><Icon name="member" />Submitted by {resultItem.member_name}</span>
+                                                                    <span className="list-meta"><Icon name="team" />{resultItem.team_name}</span>
+                                                                    <span className="list-meta"><Icon name="calendar" />{formatDisplay(resultItem.created_at)}</span>
+                                                                </div>
+                                                                <div className="value-pill">{resultItem.image_count || 0}</div>
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                ) : (
+                                                    <div className="empty">No matching batch found.</div>
+                                                )}
+                                            </div>
+                                        </div>
                                     </div>
-                                    <DateField value={dashboardDate} onChange={e => setDashboardDate(e.target.value)} ariaLabel="dashboard date" />
-                                </div>
                             ) : (
                                 <div className="date-chip">
                                     <div className="date-chip-head">
@@ -2057,7 +2556,14 @@
                                             <div className="report-icon"><Icon name="activity" /></div>
                                             <h2 className="section-title">Selected date performance at a glance</h2>
                                         </div>
-                                        <p className="section-copy">The selected dashboard date drives the daily KPIs, while the overall total stays fixed as the all-time annotation count.</p>
+                                        <p className="section-copy">The annotation batch date drives the daily KPIs, while the overall total stays fixed as the all-time annotation count.</p>
+                                        <div className="date-chip compact">
+                                            <div className="date-chip-head">
+                                                <Icon name="calendar" />
+                                                <label>Active date</label>
+                                            </div>
+                                            <div className="date-chip-value">{formatDisplay(entryDate)}</div>
+                                        </div>
 
                                         <div className="hero-stats">
                                             <div className="mini-stat">
@@ -2071,7 +2577,7 @@
                                                 <div className="stat-badge"><Icon name="image" /></div>
                                                 <div className="stat-copy">
                                                     <strong>{totalToday}</strong>
-                                                    <span>Images submitted today</span>
+                                                    <span>Images submitted on {formatDisplay(entryDate)}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -2084,7 +2590,7 @@
                                                 <div className="report-icon"><Icon name="submit" /></div>
                                                 <h2 className="section-title">Add annotation batch</h2>
                                             </div>
-                                            <p className="section-copy">Choose a team, pick a member, enter the batch, and save it against the form date without changing the dashboard filter.</p>
+                                            <p className="section-copy">Choose a team, pick a member, enter the batch, and save it against the form date that also drives the dashboard KPIs.</p>
                                         </div>
 
                                         <div className="form-grid">
@@ -2139,58 +2645,6 @@
                                     </div>
                                 </section>
 
-                                <section className="report-card panel">
-                                    <div className="report-head">
-                                        <div className="report-title">
-                                            <div className="report-icon"><Icon name="search" /></div>
-                                            <div>
-                                                <div className="kicker">Quick Lookup</div>
-                                                <h3>Search by Batch Number</h3>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <p className="section-copy">Start typing and matching batches appear instantly, including partial matches.</p>
-
-                                    <div className="form-grid">
-                                        <div className="field" style={{ gridColumn: "1 / -1" }}>
-                                            <label className="field-label"><Icon name="batch" />Batch Number</label>
-                                            <input
-                                                value={batchLookup}
-                                                placeholder="Enter batch number"
-                                                onChange={(event) => {
-                                                    setBatchLookup(event.target.value);
-                                                    if (batchLookupError) setBatchLookupError("");
-                                                }}
-                                            />
-                                        </div>
-                                    </div>
-
-                                    {isBatchLookupLoading ? (
-                                        <div className="empty">Searching batch...</div>
-                                    ) : batchLookupError ? (
-                                        <div className="empty">{batchLookupError}</div>
-                                    ) : !batchLookup.trim() ? (
-                                        <div className="empty">Type a batch number to see live matches.</div>
-                                    ) : batchLookupResults.length ? (
-                                        <ul className="list">
-                                            {batchLookupResults.map((resultItem) => (
-                                                <li className="list-item" key={resultItem.id}>
-                                                    <div>
-                                                        <strong>{resultItem.batch_name}</strong>
-                                                        <span className="list-meta"><Icon name="member" />Submitted by {resultItem.member_name}</span>
-                                                        <span className="list-meta"><Icon name="team" />{resultItem.team_name}</span>
-                                                        <span className="list-meta"><Icon name="calendar" />{resultItem.created_at}</span>
-                                                    </div>
-                                                    <div className="value-pill">{resultItem.image_count || 0}</div>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    ) : (
-                                        <div className="empty">No matching batch found.</div>
-                                    )}
-                                </section>
-
                                 <section className="reports-grid">
                                     <article className="report-card panel">
                                         <div className="report-head">
@@ -2206,17 +2660,32 @@
                                         {teamReport.length ? (
                                             <ul className="list">
                                                 {teamReport.map((t, i) => (
-                                                    <li className="list-item" key={i}>
-                                                        <div>
-                                                            <strong>{t.name}</strong>
-                                                            <span className="list-meta"><Icon name="chart" />Total recorded output</span>
-                                                            <span className="team-member-breakdown">
-                                                                {t.members?.length
-                                                                    ? t.members.map(memberItem => `${memberItem.name} (${memberItem.total})`).join("  •  ")
-                                                                    : "No member totals yet"}
-                                                            </span>
+                                                    <li className="list-item team-card" key={i}>
+                                                        <div className="team-card-left">
+                                                            <div className="team-header">
+                                                                <div className="team-icon"><Icon name="team" /></div>
+                                                                <div className="team-name">{t.name}</div>
+                                                            </div>
+                                                            {t.members?.length ? (
+                                                                <div className="team-pill-row">
+                                                                    {t.members.map((memberItem, memberIndex) => (
+                                                                        <div className="team-pill" key={memberItem.member_id || memberIndex}>
+                                                                            <div className={`team-pill-avatar ${memberIndex % 2 === 0 ? "teal" : "blue"}`}>
+                                                                                {getInitials(memberItem.name)}
+                                                                            </div>
+                                                                            <div className="team-pill-name">{memberItem.name}</div>
+                                                                            <div className="team-pill-count">{memberItem.total}</div>
+                                                                        </div>
+                                                                    ))}
+                                                                </div>
+                                                            ) : (
+                                                                <span className="team-member-breakdown">No member totals yet</span>
+                                                            )}
                                                         </div>
-                                                        <div className="value-pill">{t.total || 0}</div>
+                                                        <div className="team-total">
+                                                            <div className="team-total-value">{t.total || 0}</div>
+                                                            <div className="team-total-label">total</div>
+                                                        </div>
                                                     </li>
                                                 ))}
                                             </ul>
@@ -2272,7 +2741,7 @@
                                         <div className="report-icon"><Icon name="users" /></div>
                                         <h2 className="section-title">Filter team report by team and date</h2>
                                     </div>
-                                    <p className="section-copy">These filters are fully independent from the main dashboard date and form date. Choose a team and required date to load member cards and batch details.</p>
+                                    <p className="section-copy">These filters are fully independent from the main form date. Choose a team and required date to load member cards and batch details.</p>
 
                                     <div className="filter-grid">
                                         <div className="field">
@@ -2401,6 +2870,76 @@
                                         <h2 className="section-title">Edit user profile details</h2>
                                     </div>
                                     <p className="section-copy">Update member names and profile pictures. Click save to apply changes.</p>
+                                </section>
+
+                                <section className="form-panel panel">
+                                    <div className="eyebrow">Add New User</div>
+                                    <div className="section-title-row">
+                                        <div className="report-icon"><Icon name="member" /></div>
+                                        <h2 className="section-title">Create member and assign team</h2>
+                                    </div>
+                                    <p className="section-copy">Enter a new member, assign a team, and optionally upload a profile picture.</p>
+
+                                    <div className="form-grid">
+                                        <div className="field">
+                                            <label className="field-label"><Icon name="member" />Member name</label>
+                                            <input
+                                                value={newMemberName}
+                                                onChange={(event) => setNewMemberName(event.target.value)}
+                                                placeholder="Enter member name"
+                                            />
+                                        </div>
+
+                                        <div className="field">
+                                            <label className="field-label"><Icon name="team" />Assign team</label>
+                                            <select
+                                                value={newMemberTeamId}
+                                                onChange={(event) => setNewMemberTeamId(event.target.value)}
+                                            >
+                                                <option value="">Select Team</option>
+                                                {teams.map((teamItem) => (
+                                                    <option key={teamItem.id} value={teamItem.id}>{teamItem.name}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div className="form-grid">
+                                        <div className="field">
+                                            <label className="field-label"><Icon name="image" />Profile image (optional)</label>
+                                            <input
+                                                type="file"
+                                                accept="image/*"
+                                                onChange={handleNewMemberPhotoFile}
+                                            />
+                                        </div>
+                                        <div className="field">
+                                            <label className="field-label"><Icon name="profile" />Preview</label>
+                                            {newMemberProfileImage ? (
+                                                <img className="profile-preview" src={newMemberProfileImage} alt={newMemberName || "New member"} />
+                                            ) : (
+                                                <div className="profile-fallback">
+                                                    {(newMemberName || "U").charAt(0).toUpperCase()}
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    <div className="submit-row">
+                                        <div className="helper">
+                                            <Icon name="users" />
+                                            New users appear in this directory and the team member dropdown.
+                                        </div>
+                                        <button
+                                            type="button"
+                                            className="button"
+                                            onClick={createMemberProfile}
+                                            disabled={isCreatingMember}
+                                        >
+                                            <Icon name="submit" />
+                                            {isCreatingMember ? "Creating..." : "Create User"}
+                                        </button>
+                                    </div>
                                 </section>
 
                                 <section className="member-table-wrap panel">
@@ -2570,7 +3109,7 @@
                                         <div>
                                             <div className="kicker">Selected Date</div>
                                             <h3>{selectedBreakdownMember.member} Batches</h3>
-                                            <p className="modal-copy">{dashboardDate}</p>
+                                            <p className="modal-copy">{formatDisplay(entryDate)}</p>
                                         </div>
                                         <button type="button" className="icon-button" onClick={closeBreakdownModal} aria-label="Close modal">
                                             <Icon name="close" />
@@ -2586,15 +3125,161 @@
                                         <div className="empty">{breakdownBatchError}</div>
                                     ) : selectedBreakdownBatches.length ? (
                                         <ul className="list">
-                                            {selectedBreakdownBatches.map((batchItem) => (
-                                                <li className="list-item" key={batchItem.id}>
-                                                    <div>
-                                                        <strong>{batchItem.batch_name}</strong>
-                                                        <span className="list-meta">Batch Number</span>
-                                                    </div>
-                                                    <div className="value-pill">{batchItem.image_count || 0}</div>
-                                                </li>
-                                            ))}
+                                            {selectedBreakdownBatches.map((batchItem) => {
+                                                const isEditing = breakdownEditingId === batchItem.id;
+                                                const isDeleting = breakdownDeleteId === batchItem.id;
+                                                return (
+                                                    <li className="list-item" key={batchItem.id}>
+                                                        <div style={{ flex: 1 }}>
+                                                            {isEditing ? (
+                                                                <input
+                                                                    className="batch-edit-input"
+                                                                    value={breakdownEditName}
+                                                                    onChange={(event) => setBreakdownEditName(event.target.value)}
+                                                                    placeholder="Batch number"
+                                                                />
+                                                            ) : (
+                                                                <div>
+                                                                    <strong>{batchItem.batch_name}</strong>
+                                                                    <span className="list-meta">Batch Number</span>
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                        <div style={{ display: "flex", alignItems: "center" }}>
+                                                            {isEditing ? (
+                                                                <input
+                                                                    className="batch-edit-input"
+                                                                    type="number"
+                                                                    min="1"
+                                                                    value={breakdownEditCount}
+                                                                    onChange={(event) => setBreakdownEditCount(event.target.value)}
+                                                                    placeholder="Images"
+                                                                    style={{ width: 90 }}
+                                                                />
+                                                            ) : (
+                                                                <div className="value-pill">{batchItem.image_count || 0}</div>
+                                                            )}
+                                                            {isEditing ? (
+                                                                <div style={{ display: "flex", gap: "6px", alignItems: "center", marginLeft: "8px" }}>
+                                                                    <button
+                                                                        type="button"
+                                                                        onClick={() => saveBreakdownEdit(batchItem)}
+                                                                        style={{
+                                                                            padding: "6px 10px",
+                                                                            borderRadius: 8,
+                                                                            border: "1px solid var(--line)",
+                                                                            background: "#f8fbff",
+                                                                            cursor: "pointer",
+                                                                            fontSize: 12,
+                                                                            fontWeight: 600,
+                                                                            color: "var(--text)"
+                                                                        }}
+                                                                    >
+                                                                        Save
+                                                                    </button>
+                                                                    <button
+                                                                        type="button"
+                                                                        onClick={cancelBreakdownEdit}
+                                                                        style={{
+                                                                            padding: "6px 10px",
+                                                                            borderRadius: 8,
+                                                                            border: "1px solid var(--line)",
+                                                                            background: "#ffffff",
+                                                                            cursor: "pointer",
+                                                                            fontSize: 12,
+                                                                            fontWeight: 600,
+                                                                            color: "var(--muted)"
+                                                                        }}
+                                                                    >
+                                                                        Cancel
+                                                                    </button>
+                                                                </div>
+                                                            ) : (
+                                                                <div style={{ display: "flex", gap: "6px", alignItems: "center", marginLeft: "8px" }}>
+                                                                    <button
+                                                                        type="button"
+                                                                        onClick={() => startBreakdownEdit(batchItem)}
+                                                                        className="breakdown-action-btn"
+                                                                        style={{
+                                                                            width: 30,
+                                                                            height: 30,
+                                                                            borderRadius: 8,
+                                                                            border: "0.5px solid var(--line)",
+                                                                            background: "#f8fbff",
+                                                                            display: "flex",
+                                                                            alignItems: "center",
+                                                                            justifyContent: "center",
+                                                                            cursor: "pointer",
+                                                                            color: "var(--muted)"
+                                                                        }}
+                                                                        aria-label="Edit batch"
+                                                                    >
+                                                                        <Icon name="edit" />
+                                                                    </button>
+                                                                    {isDeleting ? (
+                                                                        <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
+                                                                            <span style={{ fontSize: 12, color: "var(--muted)" }}>Confirm delete?</span>
+                                                                            <button
+                                                                                type="button"
+                                                                                onClick={() => confirmBreakdownDelete(batchItem)}
+                                                                                style={{
+                                                                                    padding: "6px 10px",
+                                                                                    borderRadius: 8,
+                                                                                    border: "1px solid #fca5a5",
+                                                                                    background: "#fee2e2",
+                                                                                    cursor: "pointer",
+                                                                                    fontSize: 12,
+                                                                                    fontWeight: 600,
+                                                                                    color: "#b91c1c"
+                                                                                }}
+                                                                            >
+                                                                                Yes
+                                                                            </button>
+                                                                            <button
+                                                                                type="button"
+                                                                                onClick={cancelBreakdownDelete}
+                                                                                style={{
+                                                                                    padding: "6px 10px",
+                                                                                    borderRadius: 8,
+                                                                                    border: "1px solid var(--line)",
+                                                                                    background: "#ffffff",
+                                                                                    cursor: "pointer",
+                                                                                    fontSize: 12,
+                                                                                    fontWeight: 600,
+                                                                                    color: "var(--muted)"
+                                                                                }}
+                                                                            >
+                                                                                Cancel
+                                                                            </button>
+                                                                        </div>
+                                                                    ) : (
+                                                                        <button
+                                                                            type="button"
+                                                                            onClick={() => requestBreakdownDelete(batchItem)}
+                                                                            className="breakdown-action-btn"
+                                                                            style={{
+                                                                                width: 30,
+                                                                                height: 30,
+                                                                                borderRadius: 8,
+                                                                                border: "0.5px solid #fecaca",
+                                                                                background: "#fff5f5",
+                                                                                display: "flex",
+                                                                                alignItems: "center",
+                                                                                justifyContent: "center",
+                                                                                cursor: "pointer",
+                                                                                color: "#dc2626"
+                                                                            }}
+                                                                            aria-label="Delete batch"
+                                                                        >
+                                                                            <Icon name="trash" />
+                                                                        </button>
+                                                                    )}
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    </li>
+                                                );
+                                            })}
                                         </ul>
                                     ) : (
                                         <div className="empty">No batches submitted by this member on the selected date.</div>
@@ -2610,7 +3295,7 @@
                                         <div>
                                             <div className="kicker">Date Range</div>
                                             <h3>{selectedRangeMember.member_name} Batches</h3>
-                                            <p className="modal-copy">{rangeStartDate} to {rangeEndDate}</p>
+                                            <p className="modal-copy">{formatDisplay(rangeStartDate)} to {formatDisplay(rangeEndDate)}</p>
                                         </div>
                                         <button type="button" className="icon-button" onClick={closeRangeMemberModal} aria-label="Close modal">
                                             <Icon name="close" />
@@ -2628,7 +3313,7 @@
                                                 <li className="list-item" key={batchItem.id}>
                                                     <div>
                                                         <strong>{batchItem.batch_name}</strong>
-                                                        <span className="list-meta"><Icon name="calendar" />{batchItem.created_at}</span>
+                                                        <span className="list-meta"><Icon name="calendar" />{formatDisplay(batchItem.created_at)}</span>
                                                     </div>
                                                     <div className="value-pill">{batchItem.image_count || 0}</div>
                                                 </li>
