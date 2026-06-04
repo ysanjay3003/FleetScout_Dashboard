@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 import sqlite3
@@ -12,6 +12,7 @@ INDEX_FILE = BASE_DIR / "index.html"
 MEMBER_REPORT_TEMPLATE_FILE = BASE_DIR / "member_report_template.html"
 FLEETSCOUT_ICON_FILE = BASE_DIR / "Fleetscout_icon.png"
 FLEETSCOUT_LOGO_FILE = BASE_DIR / "fleetsout-logo.png"
+DB_FILE = BASE_DIR / "Truck_Annotation.sqlite3"
 
 app.add_middleware(
     CORSMiddleware,
@@ -22,7 +23,7 @@ app.add_middleware(
 )
 
 def get_db():
-    conn = sqlite3.connect("db.sqlite3")
+    conn = sqlite3.connect(str(DB_FILE))
     conn.row_factory = sqlite3.Row
     return conn
 
@@ -212,8 +213,7 @@ def update_member(member_id: int, data: dict):
     conn.commit()
     return {"status": "ok"}
 
-@app.post("/add")
-def add_entry(data: dict):
+def add_annotation_batch(data: dict):
     conn = get_db()
     entry_date = data.get("created_at", str(date.today()))
     batch_name = (data.get("batch_name") or "").strip()
@@ -237,6 +237,80 @@ def add_entry(data: dict):
     )
     conn.commit()
     return {"status": "ok"}
+
+@app.post("/api/annotation-batch")
+def add_annotation_batch_api(data: dict):
+    return add_annotation_batch(data)
+
+@app.post("/add")
+def add_entry(data: dict):
+    return add_annotation_batch(data)
+
+@app.get("/api/dashboard")
+def dashboard_data(selected_date: str = Query(..., alias="date")):
+    conn = get_db()
+
+    person_by_date = conn.execute("""
+        SELECT m.name, SUM(a.image_count) as total
+        FROM annotations a
+        JOIN members m ON a.member_id = m.id
+        WHERE a.created_at = ?
+        GROUP BY m.id
+    """, (selected_date,)).fetchall()
+
+    team_overall_rows = conn.execute("""
+        SELECT
+            t.id as team_id,
+            t.name as name,
+            m.id as member_id,
+            m.name as member_name,
+            COALESCE(SUM(a.image_count), 0) as member_total
+        FROM teams t
+        LEFT JOIN members m ON m.team_id = t.id
+        LEFT JOIN annotations a ON a.member_id = m.id
+        GROUP BY t.id, m.id
+        ORDER BY t.id, member_total DESC, m.id
+    """).fetchall()
+
+    teams = {}
+    for row in team_overall_rows:
+        team_id = row["team_id"]
+        if team_id not in teams:
+            teams[team_id] = {
+                "team_id": team_id,
+                "name": row["name"],
+                "total": 0,
+                "members": []
+            }
+
+        member_total = row["member_total"] or 0
+        teams[team_id]["total"] += member_total
+
+        if row["member_id"] is not None and member_total > 0:
+            teams[team_id]["members"].append({
+                "member_id": row["member_id"],
+                "name": row["member_name"],
+                "total": member_total
+            })
+
+    team_detail = conn.execute("""
+        SELECT
+            t.name as team,
+            m.id as member_id,
+            m.name as member,
+            SUM(a.image_count) as total
+        FROM annotations a
+        JOIN members m ON a.member_id = m.id
+        JOIN teams t ON m.team_id = t.id
+        WHERE a.created_at = ?
+        GROUP BY t.id, m.id
+    """, (selected_date,)).fetchall()
+
+    return {
+        "person_report": person_by_date,
+        "team_report": list(teams.values()),
+        "team_detail_report": team_detail
+    }
 
 @app.put("/annotations/{annotation_id}")
 def update_annotation(annotation_id: int, data: dict):

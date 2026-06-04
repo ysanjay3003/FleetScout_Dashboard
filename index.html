@@ -1964,7 +1964,13 @@
                 });
             }
 
-            async function submit() {
+            async function submit(event) {
+                if (event?.preventDefault) {
+                    event.preventDefault();
+                }
+                if (event?.stopPropagation) {
+                    event.stopPropagation();
+                }
                 if (!member || !batch || !count) {
                     alert("Please select a member and fill in batch name and image count.");
                     return;
@@ -1972,7 +1978,7 @@
 
                 setBatchError("");
 
-                const response = await fetch("http://127.0.0.1:8000/add", {
+                const response = await fetch("http://127.0.0.1:8000/api/annotation-batch", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
@@ -2030,20 +2036,18 @@
             }
 
             function loadReports(selectedDate = entryDate) {
-                fetch(`http://127.0.0.1:8000/report/person-by-date/${selectedDate}`)
-                    .then(res => res.json())
-                    .then(setPersonReport);
-
-                fetch("http://127.0.0.1:8000/report/team")
+                fetch(`http://127.0.0.1:8000/api/dashboard?date=${selectedDate}`)
                     .then(res => res.json())
                     .then(data => {
-                        const sorted = [...data].sort((a, b) => Number(b.total || 0) - Number(a.total || 0));
-                        setTeamReport(sorted);
-                    });
+                        const personData = Array.isArray(data.person_report) ? data.person_report : [];
+                        const teamData = Array.isArray(data.team_report) ? data.team_report : [];
+                        const detailData = Array.isArray(data.team_detail_report) ? data.team_detail_report : [];
 
-                fetch(`http://127.0.0.1:8000/report/team-detail/${selectedDate}`)
-                    .then(res => res.json())
-                    .then(setTeamDetailReport);
+                        setPersonReport(personData);
+                        const sorted = [...teamData].sort((a, b) => Number(b.total || 0) - Number(a.total || 0));
+                        setTeamReport(sorted);
+                        setTeamDetailReport(detailData);
+                    });
             }
 
             function loadRangeReports(startDate = rangeStartDate, endDate = rangeEndDate) {
@@ -2640,7 +2644,7 @@
                                         </div>
 
                                         <div className="submit-row">
-                                            <button className="button" onClick={submit}><Icon name="submit" />Save Entry</button>
+                                            <button className="button" type="button" onClick={submit}><Icon name="submit" />Save Entry</button>
                                         </div>
                                     </div>
                                 </section>
