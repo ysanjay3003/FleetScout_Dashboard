@@ -538,12 +538,6 @@
             gap: 22px;
         }
 
-        .team-report-shell {
-            display: flex;
-            flex-direction: column;
-            gap: 22px;
-        }
-
         .range-report-shell {
             display: flex;
             flex-direction: column;
@@ -678,60 +672,6 @@
             margin-top: 18px;
         }
 
-        .member-card-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 22px;
-        }
-
-        .member-detail-card {
-            padding: 22px;
-            min-height: 280px;
-        }
-
-        .member-total {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            margin: 18px 0;
-            padding: 12px 14px;
-            border-radius: 16px;
-            background: linear-gradient(135deg, #edf7ff, #f8fbff);
-            border: 1px solid rgba(216, 225, 240, 0.96);
-            color: var(--text);
-            font-weight: 800;
-        }
-
-        .member-total-icon {
-            width: 52px;
-            height: 52px;
-            border-radius: 16px;
-            display: grid;
-            place-items: center;
-            background: linear-gradient(135deg, #dff1ff, #eef7ff);
-            color: var(--primary);
-            border: 1px solid rgba(216, 225, 240, 0.96);
-            flex-shrink: 0;
-        }
-
-        .member-total-icon svg {
-            width: 22px;
-            height: 22px;
-            stroke: currentColor;
-            fill: none;
-            stroke-width: 2;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-        }
-
-        .batch-list-title {
-            margin: 8px 0 12px;
-            font-size: 14px;
-            color: var(--muted);
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-        }
 
         .report-card,
         .breakdown-card {
@@ -958,11 +898,6 @@
             gap: 8px;
         }
 
-        .batch-actions {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
 
         .icon-button {
             width: 34px;
@@ -1021,12 +956,6 @@
             color: #ef4444;
         }
 
-        .batch-edit-grid {
-            display: grid;
-            grid-template-columns: minmax(0, 1fr) 120px;
-            gap: 10px;
-            width: 100%;
-        }
 
         .batch-edit-input {
             width: 100%;
@@ -1442,7 +1371,6 @@
         function App() {
             const today = new Date().toISOString().split("T")[0];
             function getViewFromLocation() {
-                if (window.location.hash === "#/team-report-dashboard") return "team-report";
                 if (window.location.hash === "#/date-range-report-dashboard") return "range-report";
                 if (window.location.hash === "#/member-settings-dashboard") return "member-settings";
                 return "dashboard";
@@ -1455,17 +1383,14 @@
             const [team, setTeam] = React.useState("");
             const [member, setMember] = React.useState("");
             const [batch, setBatch] = React.useState("");
-            const [count, setCount] = React.useState("");
+            const [count, setCount] = React.useState("10");
             const [entryDate, setEntryDate] = React.useState(today);
-            const [teamReportTeam, setTeamReportTeam] = React.useState("");
-            const [teamReportDate, setTeamReportDate] = React.useState(today);
             const [rangeStartDate, setRangeStartDate] = React.useState(today);
             const [rangeEndDate, setRangeEndDate] = React.useState(today);
 
             const [personReport, setPersonReport] = React.useState([]);
             const [teamReport, setTeamReport] = React.useState([]);
             const [teamDetailReport, setTeamDetailReport] = React.useState([]);
-            const [teamMemberReport, setTeamMemberReport] = React.useState([]);
             const [rangeTeamReport, setRangeTeamReport] = React.useState([]);
             const [rangeMemberReport, setRangeMemberReport] = React.useState([]);
             const [selectedRangeMember, setSelectedRangeMember] = React.useState(null);
@@ -1488,10 +1413,6 @@
             const [breakdownDeleteId, setBreakdownDeleteId] = React.useState(null);
             const [toast, setToast] = React.useState(null);
             const [batchError, setBatchError] = React.useState("");
-            const [editingBatchId, setEditingBatchId] = React.useState(null);
-            const [editBatchName, setEditBatchName] = React.useState("");
-            const [editImageCount, setEditImageCount] = React.useState("");
-            const [batchActionError, setBatchActionError] = React.useState("");
             const [batchLookup, setBatchLookup] = React.useState("");
             const [batchLookupResults, setBatchLookupResults] = React.useState([]);
             const [batchLookupError, setBatchLookupError] = React.useState("");
@@ -1521,18 +1442,6 @@
             React.useEffect(() => {
                 loadReports(entryDate);
             }, [entryDate]);
-
-            React.useEffect(() => {
-                if (!teamReportTeam || !teamReportDate) {
-                    setTeamMemberReport([]);
-                    setEditingBatchId(null);
-                    return;
-                }
-
-                setEditingBatchId(null);
-                setBatchActionError("");
-                loadTeamMemberReport(teamReportTeam, teamReportDate);
-            }, [teamReportTeam, teamReportDate]);
 
             React.useEffect(() => {
                 if (!rangeStartDate || !rangeEndDate) return;
@@ -1858,112 +1767,6 @@
                 }
             }
 
-            function loadTeamMemberReport(teamId = teamReportTeam, selectedDate = teamReportDate) {
-                if (!teamId || !selectedDate) {
-                    setTeamMemberReport([]);
-                    return;
-                }
-
-                fetch(`http://127.0.0.1:8000/report/team-member-batches/${teamId}/${selectedDate}`)
-                    .then(res => res.json())
-                    .then(setTeamMemberReport);
-            }
-
-            function startBatchEdit(batchItem) {
-                setEditingBatchId(batchItem.id);
-                setEditBatchName(batchItem.batch_name || "");
-                setEditImageCount(String(batchItem.image_count || ""));
-                setBatchActionError("");
-            }
-
-            function cancelBatchEdit() {
-                setEditingBatchId(null);
-                setEditBatchName("");
-                setEditImageCount("");
-                setBatchActionError("");
-            }
-
-            async function saveBatchEdit(annotationId) {
-                const parsedCount = Number(editImageCount);
-                if (!editBatchName.trim() || !editImageCount || !Number.isFinite(parsedCount) || parsedCount <= 0) {
-                    setBatchActionError("Batch name and image count are required.");
-                    return;
-                }
-
-                const response = await fetch(`http://127.0.0.1:8000/annotations/${annotationId}`, {
-                    method: "PUT",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        batch_name: editBatchName,
-                        image_count: parsedCount
-                    })
-                });
-
-                if (!response.ok) {
-                    let message = "Unable to update entry.";
-                    try {
-                        const errorData = await response.json();
-                        message = errorData.detail || message;
-                    } catch (_) {
-                        // ignore parse errors and keep generic message
-                    }
-
-                    setBatchActionError(message);
-                    setToast({
-                        type: "error",
-                        title: "Update failed",
-                        message
-                    });
-                    return;
-                }
-
-                cancelBatchEdit();
-                loadTeamMemberReport();
-                loadReports(entryDate);
-                setToast({
-                    type: "success",
-                    title: "Entry updated",
-                    message: "Batch details were updated successfully."
-                });
-            }
-
-            async function deleteBatch(annotationId) {
-                if (!window.confirm("Delete this batch entry?")) return;
-
-                const response = await fetch(`http://127.0.0.1:8000/annotations/${annotationId}`, {
-                    method: "DELETE"
-                });
-
-                if (!response.ok) {
-                    let message = "Unable to delete entry.";
-                    try {
-                        const errorData = await response.json();
-                        message = errorData.detail || message;
-                    } catch (_) {
-                        // ignore parse errors and keep generic message
-                    }
-
-                    setToast({
-                        type: "error",
-                        title: "Delete failed",
-                        message
-                    });
-                    return;
-                }
-
-                if (editingBatchId === annotationId) {
-                    cancelBatchEdit();
-                }
-
-                loadTeamMemberReport();
-                loadReports(entryDate);
-                setToast({
-                    type: "success",
-                    title: "Entry deleted",
-                    message: "Batch entry was removed."
-                });
-            }
-
             async function submit(event) {
                 if (event?.preventDefault) {
                     event.preventDefault();
@@ -2025,13 +1828,11 @@
             }
 
             function openView(nextView) {
-                const nextPath = nextView === "team-report"
-                    ? "#/team-report-dashboard"
-                    : nextView === "range-report"
-                        ? "#/date-range-report-dashboard"
-                        : nextView === "member-settings"
-                            ? "#/member-settings-dashboard"
-                        : "#/annotation-dashboard";
+                const nextPath = nextView === "range-report"
+                    ? "#/date-range-report-dashboard"
+                    : nextView === "member-settings"
+                        ? "#/member-settings-dashboard"
+                    : "#/annotation-dashboard";
                 window.location.hash = nextPath;
             }
 
@@ -2458,9 +2259,6 @@
                         <button className={`nav-dot ${activeView === "dashboard" ? "active" : ""}`} onClick={() => openView("dashboard")} type="button" title="Open Annotation Dashboard">
                             <Icon name="chart" />
                         </button>
-                        <button className={`nav-dot ${activeView === "team-report" ? "active" : ""}`} onClick={() => openView("team-report")} type="button" title="Open Team Report">
-                            <Icon name="users" />
-                        </button>
                         <button className={`nav-dot ${activeView === "range-report" ? "active" : ""}`} onClick={() => openView("range-report")} type="button" title="Open Date Range Report">
                             <Icon name="layers" />
                         </button>
@@ -2476,20 +2274,16 @@
                                 <h1 className="title">
                                     {activeView === "dashboard"
                                         ? "Annotation Dashboard"
-                                        : activeView === "team-report"
-                                            ? "Team Report"
-                                            : activeView === "range-report"
-                                                ? "Date Range Team & Member Report"
-                                                : "Member Settings"}
+                                        : activeView === "range-report"
+                                            ? "Date Range Team & Member Report"
+                                            : "Member Settings"}
                                 </h1>
                                 <p className="subtitle">
                                     {activeView === "dashboard"
                                         ? "Track annotator output, team totals, and daily contribution in one view."
-                                        : activeView === "team-report"
-                                            ? "Inspect one team for a required date, with member totals and batch-level output."
-                                            : activeView === "range-report"
-                                                ? "Select a date range and review team-level and member-level image submissions."
-                                                : "Edit user name and profile picture from one central table."}
+                                        : activeView === "range-report"
+                                            ? "Select a date range and review team-level and member-level image submissions."
+                                            : "Edit user name and profile picture from one central table."}
                                 </p>
                             </div>
                             {activeView === "dashboard" ? (
@@ -2526,9 +2320,12 @@
                                                             <li className="list-item" key={resultItem.id}>
                                                                 <div>
                                                                     <strong>{resultItem.batch_name}</strong>
-                                                                    <span className="list-meta"><Icon name="member" />Submitted by {resultItem.member_name}</span>
-                                                                    <span className="list-meta"><Icon name="team" />{resultItem.team_name}</span>
-                                                                    <span className="list-meta"><Icon name="calendar" />{formatDisplay(resultItem.created_at)}</span>
+                                                                    <span className="list-meta">
+                                                                        <Icon name="calendar" />
+                                                                        {formatDisplay(resultItem.created_at)}{" | "}
+                                                                        {resultItem.member_name}{" | "}
+                                                                        {resultItem.team_name}
+                                                                    </span>
                                                                 </div>
                                                                 <div className="value-pill">{resultItem.image_count || 0}</div>
                                                             </li>
@@ -2537,16 +2334,16 @@
                                                 ) : (
                                                     <div className="empty">No matching batch found.</div>
                                                 )}
-                                            </div>
                                         </div>
                                     </div>
+                                </div>
                             ) : (
                                 <div className="date-chip">
                                     <div className="date-chip-head">
                                         <Icon name="users" />
                                         <label>Module</label>
                                     </div>
-                                    <input value={activeView === "team-report" ? "Team Report View" : activeView === "range-report" ? "Date Range Report View" : "Member Settings View"} readOnly />
+                                    <input value={activeView === "range-report" ? "Date Range Report View" : "Member Settings View"} readOnly />
                                 </div>
                             )}
                         </section>
@@ -2737,134 +2534,6 @@
                                     </article>
                                 </section>
                             </>
-                        ) : activeView === "team-report" ? (
-                            <section className="team-report-shell">
-                                <section className="filter-panel panel">
-                                    <div className="eyebrow">Team Filters</div>
-                                    <div className="section-title-row">
-                                        <div className="report-icon"><Icon name="users" /></div>
-                                        <h2 className="section-title">Filter team report by team and date</h2>
-                                    </div>
-                                    <p className="section-copy">These filters are fully independent from the main form date. Choose a team and required date to load member cards and batch details.</p>
-
-                                    <div className="filter-grid">
-                                        <div className="field">
-                                            <label className="field-label"><Icon name="team" />Team selector</label>
-                                            <select value={teamReportTeam} onChange={e => setTeamReportTeam(e.target.value)}>
-                                                <option value="">Select Team</option>
-                                                {teams.map(t => (
-                                                    <option key={t.id} value={t.id}>{t.name}</option>
-                                                ))}
-                                            </select>
-                                        </div>
-
-                                        <div className="field">
-                                            <label className="field-label"><Icon name="calendar" />Report date</label>
-                                            <DateField value={teamReportDate} onChange={e => setTeamReportDate(e.target.value)} ariaLabel="team report date" />
-                                        </div>
-                                    </div>
-                                </section>
-
-                                <section className="member-card-grid">
-                                    {teamReportTeam && teamReportDate ? (
-                                        teamMemberReport.length ? (
-                                            teamMemberReport.map((memberCard) => (
-                                                <article className="member-detail-card panel" key={memberCard.member_id}>
-                                                    <div className="report-head">
-                                                        <div className="report-title">
-                                                            <div className="report-icon"><Icon name="member" /></div>
-                                                            <div>
-                                                                <div className="kicker">Selected Team Member</div>
-                                                                <h3>{memberCard.member_name}</h3>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="member-total">
-                                                        <div className="member-total-icon">
-                                                            <Icon name="image" />
-                                                        </div>
-                                                        Total images submitted: {memberCard.total_images || 0}
-                                                    </div>
-
-                                                    <div className="batch-list-title">Batches on selected date</div>
-
-                                                    {memberCard.batches.length ? (
-                                                        <ul className="list">
-                                                            {memberCard.batches.map((batchItem) => {
-                                                                const isEditing = editingBatchId === batchItem.id;
-                                                                return (
-                                                                    <li className="list-item" key={batchItem.id}>
-                                                                        <div style={{ flex: 1 }}>
-                                                                            {isEditing ? (
-                                                                                <>
-                                                                                    <div className="batch-edit-grid">
-                                                                                        <input
-                                                                                            className="batch-edit-input"
-                                                                                            value={editBatchName}
-                                                                                            onChange={e => setEditBatchName(e.target.value)}
-                                                                                            placeholder="Batch name"
-                                                                                        />
-                                                                                        <input
-                                                                                            className="batch-edit-input"
-                                                                                            type="number"
-                                                                                            min="1"
-                                                                                            value={editImageCount}
-                                                                                            onChange={e => setEditImageCount(e.target.value)}
-                                                                                            placeholder="Image count"
-                                                                                        />
-                                                                                    </div>
-                                                                                    {batchActionError ? <div className="field-error">{batchActionError}</div> : null}
-                                                                                </>
-                                                                            ) : (
-                                                                                <div>
-                                                                                    <strong>{batchItem.batch_name}</strong>
-                                                                                    <span className="list-meta"><Icon name="batch" />Batch name or number</span>
-                                                                                </div>
-                                                                            )}
-                                                                        </div>
-
-                                                                        <div className="batch-row-right">
-                                                                            {!isEditing ? <div className="value-pill">{batchItem.image_count || 0}</div> : null}
-                                                                            <div className="batch-actions">
-                                                                                {isEditing ? (
-                                                                                    <>
-                                                                                        <button className="icon-button icon-button-success" type="button" title="Save batch" onClick={() => saveBatchEdit(batchItem.id)}>
-                                                                                            <Icon name="check" />
-                                                                                        </button>
-                                                                                        <button className="icon-button icon-button-danger" type="button" title="Cancel edit" onClick={cancelBatchEdit}>
-                                                                                            <Icon name="close" />
-                                                                                        </button>
-                                                                                    </>
-                                                                                ) : (
-                                                                                    <>
-                                                                                        <button className="icon-button" type="button" title="Edit batch" onClick={() => startBatchEdit(batchItem)}>
-                                                                                            <Icon name="edit" />
-                                                                                        </button>
-                                                                                        <button className="icon-button icon-button-danger" type="button" title="Delete batch" onClick={() => deleteBatch(batchItem.id)}>
-                                                                                            <Icon name="trash" />
-                                                                                        </button>
-                                                                                    </>
-                                                                                )}
-                                                                            </div>
-                                                                        </div>
-                                                                    </li>
-                                                                );
-                                                            })}
-                                                        </ul>
-                                                    ) : (
-                                                        <div className="empty">No batches found for this member on the selected date.</div>
-                                                    )}
-                                                </article>
-                                            ))
-                                        ) : (
-                                            <div className="empty">No members or batches found for the chosen team on this date.</div>
-                                        )
-                                    ) : (
-                                        <div className="empty">Select a team and date to view the Team Report module.</div>
-                                    )}
-                                </section>
-                            </section>
                         ) : activeView === "member-settings" ? (
                             <section className="member-settings-shell">
                                 <section className="filter-panel panel">
