@@ -1116,6 +1116,29 @@
             color: var(--muted);
         }
 
+        /* Summary panel stat chips */
+        .range-summary-chip {
+            text-align: center;
+            padding: 10px 20px;
+            border-radius: 16px;
+            min-width: 110px;
+        }
+
+        .range-summary-chip-value {
+            font-size: 32px;
+            font-weight: 800;
+            line-height: 1.1;
+        }
+
+        .range-summary-chip-label {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 4px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
         @media (max-width: 1100px) {
 
             .hero,
@@ -1158,6 +1181,10 @@
             .submit-row {
                 flex-direction: column;
                 align-items: stretch;
+            }
+
+            .range-summary-chips {
+                flex-wrap: wrap;
             }
         }
     </style>
@@ -2232,6 +2259,14 @@
             const rangeModalTotal = selectedRangeMemberBatches.reduce((sum, item) => sum + (Number(item.image_count) || 0), 0);
             const breakdownTotalIsHigh = breakdownModalTotal > 90;
             const rangeTotalIsHigh = rangeModalTotal > 90;
+
+            // ── NEW: range summary computed values ──────────────────────────────
+            const rangeTotalImages = rangeMemberReport.reduce((sum, m) => sum + (Number(m.total) || 0), 0);
+            const rangeActiveMembers = rangeMemberReport.filter(m => Number(m.total) > 0).length;
+            const rangeActiveTeams = rangeTeamReport.filter(t => Number(t.total) > 0).length;
+            const hasRangeData = rangeTeamReport.length > 0 || rangeMemberReport.length > 0;
+            // ───────────────────────────────────────────────────────────────────
+
             const groupedTeamDetails = Object.entries(
                 teamDetailReport.reduce((acc, item) => {
                     if (!acc[item.team]) acc[item.team] = [];
@@ -2696,6 +2731,43 @@
                                         </div>
                                     </div>
                                 </section>
+
+                                {hasRangeData && (
+                                    <section className="panel" style={{ padding: "20px 26px", display: "flex", alignItems: "center", gap: "20px", flexWrap: "wrap" }}>
+                                        <div className="report-icon" style={{ width: 52, height: 52, borderRadius: 18, flexShrink: 0 }}>
+                                            <Icon name="total" />
+                                        </div>
+                                        <div style={{ flex: 1, minWidth: 180 }}>
+                                            <div className="eyebrow">Date Range Summary</div>
+                                            <div style={{ fontSize: 15, fontWeight: 700, color: "var(--text)", marginTop: 2 }}>
+                                                {formatDisplay(rangeStartDate)} &rarr; {formatDisplay(rangeEndDate)}
+                                            </div>
+                                            <div style={{ fontSize: 13, color: "var(--muted)", marginTop: 2 }}>
+                                                Total images submitted across all members and teams
+                                            </div>
+                                        </div>
+                                        <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }} className="range-summary-chips">
+                                            <div className="range-summary-chip" style={{ background: "linear-gradient(135deg,#dff5f1,#edfdf9)", border: "1px solid #b2ece3" }}>
+                                                <div className="range-summary-chip-value" style={{ color: "#0b7c73" }}>
+                                                    {rangeTotalImages}
+                                                </div>
+                                                <div className="range-summary-chip-label">Total Images</div>
+                                            </div>
+                                            <div className="range-summary-chip" style={{ background: "linear-gradient(135deg,#e6efff,#f0f5ff)", border: "1px solid #c0d0f5" }}>
+                                                <div className="range-summary-chip-value" style={{ color: "var(--primary)" }}>
+                                                    {rangeActiveMembers}
+                                                </div>
+                                                <div className="range-summary-chip-label">Active Members</div>
+                                            </div>
+                                            <div className="range-summary-chip" style={{ background: "linear-gradient(135deg,#fff7ed,#fff3e0)", border: "1px solid #fdd9a0" }}>
+                                                <div className="range-summary-chip-value" style={{ color: "#b45309" }}>
+                                                    {rangeActiveTeams}
+                                                </div>
+                                                <div className="range-summary-chip-label">Active Teams</div>
+                                            </div>
+                                        </div>
+                                    </section>
+                                )}
 
                                 <section className="range-grid">
                                     <article className="report-card panel">
